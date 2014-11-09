@@ -6,7 +6,7 @@
 	"require": {
 		"teewebapp/system": "dev-master@dev",
 		"symfony/process": ">=2.1.0",
-		"google/apiclient": "1.0.6-beta"
+		"google/apiclient": "1.1.*@dev"
 	},
 	"autoload": {
 		"psr-4": {
