@@ -1,0 +1,5 @@
+{
+    "enabled": true,
+    "provider": ["Tee\\Backup\\ServiceProvider"],
+    "order": 20
+}

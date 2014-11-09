@@ -1,0 +1,15 @@
+{
+	"name": "teewebapp/backup",
+	"description": "Backup Module for TeeWebApp",
+	"keywords": ["teewebapp", "backup"],
+	"license": "MIT",
+	"require": {
+		"teewebapp/system": "dev-master@dev"
+	},
+	"autoload": {
+		"psr-4": {
+			"Tee\\Backup\\": "."
+		}
+	},
+	"minimum-stability": "stable"
+}
