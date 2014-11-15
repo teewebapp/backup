@@ -15,5 +15,6 @@
 			"Tee\\Backup\\": "."
 		}
 	},
-	"minimum-stability": "stable"
+	"prefer-stable": true,
+    "minimun-stability": "dev"
 }
