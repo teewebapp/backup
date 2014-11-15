@@ -1,0 +1,16 @@
+<?php
+
+namespace Tee\Backup\Tests;
+
+use Tee\System\Tests\TestCase;
+use Config;
+
+class BackupServiceTest extends TestCase {
+
+    public function testCreateDefaultBackup()
+    {
+        $service = $this->app->make('Tee\Backup\Services\BackupService');
+        $package = $service->createDefaultBackup();
+        $this->assertTrue(!empty($package));
+    }
+}

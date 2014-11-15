@@ -3,14 +3,14 @@ namespace Tee\Backup\Package;
 
 use Illuminate\Support\Contracts\JsonableInterface;
 
-class Files implements \JsonSerializable, JsonableInterface {
-    public $directory;
+class Database implements \JsonSerializable, JsonableInterface {
+    public $connection;
     public $filename;
     public $md5;
 
     public function jsonSerialize() {
         return array(
-            'directory' => $this->directory,
+            'connection' => $this->connection,
             'filename' => $this->filename,
             'md5' => $this->md5
         );

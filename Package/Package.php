@@ -1,17 +1,17 @@
 <?php
+
 namespace Tee\Backup\Package;
 
-use Illuminate\Support\Contracts\JsonableInterface;
+use Illuminate\Support\Collection;
 
-class Files implements \JsonSerializable, JsonableInterface {
-    public $directory;
+class Package extends Collection
+{
     public $filename;
     public $md5;
 
     public function jsonSerialize() {
         return array(
-            'directory' => $this->directory,
-            'filename' => $this->filename,
+            'items' => $this->all(),
             'md5' => $this->md5
         );
     }
