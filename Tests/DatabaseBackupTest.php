@@ -18,7 +18,7 @@ class DatabaseBackupTest extends TestCase {
         $this->assertNotEmpty($databaseBackup->filename);
         $this->assertNotEmpty($databaseBackup->md5);
         $this->assertTrue(file_exists($databaseBackup->filename));
-        $service->removeDirectory($databaseBackup->filename);
+        $service->remove($databaseBackup->filename);
         $this->assertFalse(file_exists($databaseBackup->filename));
     }
 

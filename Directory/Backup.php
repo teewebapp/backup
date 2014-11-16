@@ -8,7 +8,7 @@ use App;
  * @author Anderson Danilo
  */
 class Backup {
-    public function backup($targetDir) {
+    public function backup($tempDir, $targetDir) {
         $fileBackup = new \Tee\Backup\Package\Directory();
         if(!$targetDir)
             throw new \Exception("targetDir cannot be empty");

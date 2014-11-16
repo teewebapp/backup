@@ -2,6 +2,9 @@
 namespace Tee\Backup\Database;
 use App, Config;
 
+use Rah\Danpu\Dump;
+use Rah\Danpu\Export;
+
 /**
  * Create a backup of an Database
  * @author Anderson Danilo
@@ -33,9 +36,17 @@ class Backup {
         $username = $config['username'];
         $password = $config['password'];
         $database = $config['database'];
-        //$process = new Process("mysqldump -u$username -p$password $database > $filename");
-        //$process->run();
-        return true;
+        $host = $config['host'];
+
+        $dump = new Dump;
+        $dump
+            ->file($filename)
+            ->dsn("mysql:dbname=$database;host=$host")
+            ->user($username)
+            ->pass($password)
+            ->tmp(sys_get_temp_dir());
+
+        new Export($dump);
     }
 
     public function dumpSqliteDatabase($config, $filename) {
