@@ -3,7 +3,7 @@ namespace Tee\Backup\Package;
 
 use Illuminate\Support\Contracts\JsonableInterface;
 
-class Files implements \JsonSerializable, JsonableInterface {
+class Directory implements \JsonSerializable, JsonableInterface {
     public $directory;
     public $filename;
     public $md5;
