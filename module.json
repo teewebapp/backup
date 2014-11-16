@@ -1,5 +1,6 @@
 {
     "enabled": true,
     "provider": ["Tee\\Backup\\ServiceProvider"],
+    "command": ["Tee\\Backup\\Commands\\BackupCreate"],
     "order": 20
 }
