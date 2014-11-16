@@ -10,6 +10,7 @@ class Directory implements \JsonSerializable, JsonableInterface {
 
     public function jsonSerialize() {
         return array(
+            'type' => 'directory',
             'directory' => $this->directory,
             'filename' => $this->filename,
             'md5' => $this->md5

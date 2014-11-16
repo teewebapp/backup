@@ -10,6 +10,7 @@ class Database implements \JsonSerializable, JsonableInterface {
 
     public function jsonSerialize() {
         return array(
+            'type' => 'database',
             'connection' => $this->connection,
             'filename' => $this->filename,
             'md5' => $this->md5

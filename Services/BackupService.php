@@ -28,7 +28,7 @@ class BackupService {
     public function createBackup(array $databases, array $directories)
     {
         $package = new Package();
-        $tempDir = $this->getTemporaryDirectory();
+        $tempDir = $this->getPackageTemporaryDirectory();
         $databaseBackuper = App::make('Tee\Backup\Database\Backup');
         $directoryBackuper = App::make('Tee\Backup\Directory\Backup');
         foreach($directories as $directory)
@@ -41,7 +41,9 @@ class BackupService {
     }
 
     public function compressBackup(Package $package, $tempDir) {
-        $filename = tempnam(sys_get_temp_dir(), 'backup').'.tar.gz';
+        $name = tempnam(sys_get_temp_dir(), 'backup_'.date('Y-m-d_H:i:s').'_');
+        unlink($name);
+        $filename = $name.'.zip';
         $package->filename = $filename;
         $meta = $package->toJson();
         file_put_contents($tempDir.'/meta.json', $meta);
@@ -50,17 +52,23 @@ class BackupService {
         return $filename;
     }
 
-    public function getTemporaryDirectory()
+    public function getPackageTemporaryDirectory()
     {
-        if(!sys_get_temp_dir())
+        $ds = DIRECTORY_SEPARATOR;
+        if(!$this->getTemporaryDirectory())
             throw new Exception("Not found temp dir");
-        $pathName = sys_get_temp_dir().'/'.uniqid();
+        $pathName = $this->getTemporaryDirectory().$ds.uniqid();
         if(!$pathName)
             throw new \Exception('Error on create name');
         mkdir($pathName, 0700);
         if(!file_exists($pathName))
             throw new \Exception('Error on mkdir');
         return $pathName;
+    }
+
+    public function getTemporaryDirectory()
+    {
+        return sys_get_temp_dir();
     }
 
     public function remove($removePath)
@@ -83,5 +91,48 @@ class BackupService {
             }
             rmdir($removePath);
         }
+    }
+
+    public function getBaseRelativePath($to)
+    {
+        $basePath = base_path();
+        return $this->getRelativePath($basePath, $to);
+    }
+
+    public function getRelativePath($from, $to)
+    {
+        if(file_exists($from))
+            $from = realpath($from);
+        if(file_exists($to))
+            $to = realpath($to);
+        // some compatibility fixes for Windows paths
+        $from = is_dir($from) ? rtrim($from, '\/') . '/' : $from;
+        $to   = is_dir($to)   ? rtrim($to, '\/') . '/'   : $to;
+        $from = str_replace('\\', '/', $from);
+        $to   = str_replace('\\', '/', $to);
+
+        $from     = explode('/', $from);
+        $to       = explode('/', $to);
+        $relPath  = $to;
+
+        foreach($from as $depth => $dir) {
+            // find first non-matching dir
+            if($dir === $to[$depth]) {
+                // ignore this directory
+                array_shift($relPath);
+            } else {
+                // get number of remaining dirs to $from
+                $remaining = count($from) - $depth;
+                if($remaining > 1) {
+                    // add traversals up to first matching dir
+                    $padLength = (count($relPath) + $remaining - 1) * -1;
+                    $relPath = array_pad($relPath, $padLength, '..');
+                    break;
+                } else {
+                    $relPath[0] = $relPath[0];
+                }
+            }
+        }
+        return rtrim(implode('/', $relPath), '/');
     }
 }

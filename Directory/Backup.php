@@ -9,15 +9,17 @@ use App;
  */
 class Backup {
     public function backup($tempDir, $targetDir) {
+        $service = App::make('Tee\Backup\Services\BackupService');
         $fileBackup = new \Tee\Backup\Package\Directory();
         if(!$targetDir)
             throw new \Exception("targetDir cannot be empty");
-        $fileBackup->directory = $targetDir;
-        $name = md5($targetDir).'.tar';
-        $fileBackup->filename = "$tempDir/$name";
+        $fileBackup->directory = $service->getBaseRelativePath($targetDir);
+        $name = md5($targetDir).'.zip';
+        $filename = "$tempDir/$name";
+        $fileBackup->filename = $name;
         $zippy = App::make('backup.zippy');
-        $zippy->create($fileBackup->filename, $fileBackup->directory);
-        $fileBackup->md5 = md5_file($fileBackup->filename);
+        $zippy->create($filename, $targetDir);
+        $fileBackup->md5 = md5_file($filename);
         return $fileBackup;
     }
 }
