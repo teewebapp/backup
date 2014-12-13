@@ -18,6 +18,7 @@ class Backup {
         $filename = "$tempDir/$name";
         $fileBackup->filename = $name;
         $zippy = App::make('backup.zippy');
+        chmod(dirname($filename), 0777);
         $zippy->create($filename, $targetDir);
         $fileBackup->md5 = md5_file($filename);
         return $fileBackup;

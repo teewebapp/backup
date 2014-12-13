@@ -14,7 +14,7 @@ class GoogleDriveTest extends TestCase
         $configStorages = Config::get('backup::backup.storages');
         $configGdrive = $configStorages[0];
 
-        $gdrive = new Storage($configGdrive);
+        $gdrive = new Storage(1, $configGdrive);
         $this->assertTrue($gdrive->login());
 
         return $gdrive;
@@ -68,5 +68,6 @@ class GoogleDriveTest extends TestCase
         $this->assertTrue(file_exists($tempName));
         $content = str_repeat("i", round((0.5 * 1024 * 1024) * 1.5));
         $this->assertEquals($content, file_get_contents($tempName));
+        $file->delete();
     }
 }

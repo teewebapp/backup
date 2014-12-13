@@ -11,15 +11,17 @@ class Storage implements \Tee\Backup\Storage\Storage
     private $credentials;
     private $client;
     private $drive;
+    private $id;
 
     public $chunkSizeBytes;
 
     /**
      * Receives parameters from configuration
      */
-    public function __construct($configuration)
+    public function __construct($id, $configuration)
     {
         $this->chunkSizeBytes = 1 * 1024 * 1024;
+        $this->id = $id;
 
         $clientEmail = $configuration['clientEmail'];
         if($configuration['privateKeyContent'])
@@ -130,6 +132,16 @@ class Storage implements \Tee\Backup\Storage\Storage
         return $results;
     }
 
+    public function getById($id) {
+        $rawFile = $this->drive->files->get($id);
+        if($rawFile)
+            return new File($rawFile, $this);
+    }
+
+    public function delete($id) {
+        return $this->drive->files->delete($id);
+    }
+
     public function getByName($name)
     {
         foreach($this->listFiles() as $file) {
@@ -138,9 +150,13 @@ class Storage implements \Tee\Backup\Storage\Storage
         }
     }
 
-    public function getClient()
-    {
+    public function getClient() {    
         return $this->client;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
 }

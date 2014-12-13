@@ -4,7 +4,7 @@ namespace Tee\Backup\Storage\GDrive;
 
 class File implements \Tee\Backup\Storage\File
 {
-    private $rawFile;
+    public $rawFile;
 
     public function __construct($rawFile, $storage)
     {
@@ -14,6 +14,20 @@ class File implements \Tee\Backup\Storage\File
 
     public function getName() {
         return $this->rawFile->originalFilename;
+    }
+
+    /**
+     * Get file size in bytes
+     */
+    public function getSize() {
+        return $this->rawFile->fileSize;
+    }
+
+    /**
+     * Return a id for manipulation
+     */
+    public function getId() {
+        return $this->rawFile->id;
     }
 
     public function download($localPath)
@@ -43,5 +57,20 @@ class File implements \Tee\Backup\Storage\File
             // The file doesn't have any content stored on Drive.
             return null;
         }
+    }
+
+    /**
+     * self delete this file 
+     */
+    public function delete() {
+        return $this->storage->delete($this->getId());
+    }
+
+    /**
+     * get its storage
+     */
+    public function getStorage()
+    {
+        return $this->storage;
     }
 }

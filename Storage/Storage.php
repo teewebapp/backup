@@ -7,7 +7,7 @@ interface Storage
     /**
      * Receives parameters from configuration
      */
-    public function __construct($configuration);
+    public function __construct($id, $configuration);
 
     /**
      * Login (with parameters from configuration)
@@ -38,4 +38,20 @@ interface Storage
      * Get a file by its name
      */
     public function getByName($fileName);
+
+    /**
+     * Get a file by its id
+     */
+    public function getById($id);
+
+    /**
+     * Return a id for manipulation
+     */
+    public function getId();
+
+
+    /**
+     * Remove um arquivo a partir do seu id
+     */
+    public function delete($id);
 }

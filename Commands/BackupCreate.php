@@ -44,9 +44,18 @@ class BackupCreate extends Command {
         $storageService = App::make('Tee\Backup\Services\StorageService');
         
         $package = $backupService->createDefaultBackup();
-        $storageService->uploadFile($package->filename);
 
         $this->info("Backup saved on $package->filename");
+
+        if($this->option('upload')) {
+            $storageService->uploadFile($package->filename);
+            $this->info("Backup uploaded");
+        }
+
+        if($this->option('delete')) {
+            unlink($package->filename);
+            $this->info("Backup deleted from $package->filename");
+        }
     }
 
     /**
@@ -69,7 +78,8 @@ class BackupCreate extends Command {
     protected function getOptions()
     {
         return array(
-            //array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+            array('upload', null, InputOption::VALUE_OPTIONAL, 'Faz o upload do arquivo.', 1),
+            array('delete', null, InputOption::VALUE_OPTIONAL, 'Deleta o arquivo após fazer o upload.', 1),
         );
     }
 
