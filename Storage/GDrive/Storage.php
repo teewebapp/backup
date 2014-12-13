@@ -23,7 +23,7 @@ class Storage implements \Tee\Backup\Storage\Storage
 
         $clientEmail = $configuration['clientEmail'];
         if($configuration['privateKeyContent'])
-            $privateKey = base64_encode(data)($configuration['privateKeyContent']);
+            $privateKey = base64_decode($configuration['privateKeyContent']);
         else
             $privateKey = file_get_contents($configuration['privateKeyFile']);
         $scopes = array(Google_Service_Drive::DRIVE);
@@ -47,6 +47,13 @@ class Storage implements \Tee\Backup\Storage\Storage
         }
         $this->drive = new Google_Service_Drive($this->client);
         return true;
+    }
+
+    /**
+     * Do nothing 
+     */
+    public function logout() {
+        // do nothing
     }
 
     /**

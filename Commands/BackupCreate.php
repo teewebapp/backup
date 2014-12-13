@@ -40,8 +40,12 @@ class BackupCreate extends Command {
      */
     public function fire()
     {
-        $service = App::make('Tee\Backup\Services\BackupService');
-        $package = $service->createDefaultBackup();
+        $backupService = App::make('Tee\Backup\Services\BackupService');
+        $storageService = App::make('Tee\Backup\Services\StorageService');
+        
+        $package = $backupService->createDefaultBackup();
+        $storageService->uploadFile($package->filename);
+
         $this->info("Backup saved on $package->filename");
     }
 

@@ -15,6 +15,11 @@ interface Storage
     public function login();
 
     /**
+     * Logout
+     */
+    public function logout();
+
+    /**
      * Change the current directory of remote storage
      */
     public function changeDirectory($path);
