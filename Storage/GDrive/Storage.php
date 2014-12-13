@@ -23,9 +23,14 @@ class Storage implements \Tee\Backup\Storage\Storage
 
         $clientEmail = $configuration['clientEmail'];
         if($configuration['privateKeyContent'])
-            $privateKey = base64_decode($configuration['privateKeyContent']);
+        {
+            $privateKey = $configuration['privateKeyContent'];
+        }
         else
+        {
             $privateKey = file_get_contents($configuration['privateKeyFile']);
+        }
+
         $scopes = array(Google_Service_Drive::DRIVE);
         $this->credentials = new Google_Auth_AssertionCredentials(
             $clientEmail,

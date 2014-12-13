@@ -12,7 +12,7 @@ return array(
 
             'clientEmail' => getenv('BACKUP_GDRIVE_EMAIL'),
 
-            'privateKeyFile' => getenv('BACKUP_GDRIVE_PRIVATE_KEY_FILE'),
+            'privateKeyFile' => null,
 
             // optional, fill privateKeyFile OR privateKeyContent (usefull for tests in travis)
             'privateKeyContent' => base64_decode(getenv('BACKUP_GDRIVE_PRIVATE_KEY_CONTENT')),
