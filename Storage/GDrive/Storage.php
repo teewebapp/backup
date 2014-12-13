@@ -21,13 +21,16 @@ class Storage implements \Tee\Backup\Storage\Storage
     {
         $this->chunkSizeBytes = 1 * 1024 * 1024;
 
-        $client_email = $configuration['clientEmail'];
-        $private_key = file_get_contents($configuration['privateKeyFile']);
+        $clientEmail = $configuration['clientEmail'];
+        if($configuration['privateKeyContent'])
+            $privateKey = file_get_contents($configuration['privateKeyContent']);
+        else
+            $privateKey = file_get_contents($configuration['privateKeyFile']);
         $scopes = array(Google_Service_Drive::DRIVE);
         $this->credentials = new Google_Auth_AssertionCredentials(
-            $client_email,
+            $clientEmail,
             $scopes,
-            $private_key,
+            $privateKey,
             $configuration['privateKeyPassword']
         );
     }
