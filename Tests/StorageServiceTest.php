@@ -7,7 +7,6 @@ use Config;
 
 class StorageServiceTest extends TestCase
 {
-
     public function testListStorage()
     {
         $service = $this->app->make('Tee\Backup\Services\StorageService');

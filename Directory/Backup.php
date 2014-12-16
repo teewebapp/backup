@@ -18,9 +18,17 @@ class Backup {
         $filename = "$tempDir/$name";
         $fileBackup->filename = $name;
         $zippy = App::make('backup.zippy');
-        chmod(dirname($filename), 0777);
-        $zippy->create($filename, $targetDir);
+
+        $tempTargetDir = tempnam(sys_get_temp_dir(), 'tmp');
+        unlink($tempTargetDir);
+        mkdir($tempTargetDir);
+
+        $success = \File::copyDirectory($targetDir, $tempTargetDir);
+        $zippy->create($filename, $tempTargetDir);
         $fileBackup->md5 = md5_file($filename);
+
+        \File::deleteDirectory($tempTargetDir);
+
         return $fileBackup;
     }
 }

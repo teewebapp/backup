@@ -20,11 +20,6 @@ interface Storage
     public function logout();
 
     /**
-     * Change the current directory of remote storage
-     */
-    public function changeDirectory($path);
-
-    /**
      * Upload a file to current directory
      */
     public function uploadFile($localPath);
