@@ -7,7 +7,8 @@ use App, Config;
 
 use RecursiveIteratorIterator, RecursiveDirectoryIterator, FilesystemIterator;
 
-class BackupService {
+class BackupService
+{
     public function createDefaultBackup()
     {
         $databases = Config::get('backup::backup.databases');
@@ -40,7 +41,8 @@ class BackupService {
         return $package;
     }
 
-    public function compressBackup(Package $package, $tempDir) {
+    public function compressBackup(Package $package, $tempDir)
+    {
         $name = tempnam(sys_get_temp_dir(), 'backup_'.date('Y-m-d_H:i:s').'_');
         unlink($name);
         $filename = $name.'.zip';
