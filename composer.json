@@ -4,11 +4,11 @@
 	"keywords": ["teewebapp", "backup"],
 	"license": "MIT",
 	"require": {
-		"teewebapp/system": "dev-master@dev",
+		"teewebapp/system": "1.*",
 		"symfony/process": ">=2.1.0",
-		"google/apiclient": "1.1.*@dev",
-		"alchemy/zippy": "0.2.*@dev",
-		"rah/danpu": "2.*@dev"
+		"google/apiclient": "1.1.*",
+		"alchemy/zippy": "0.2.*",
+		"rah/danpu": "2.*"
 	},
 	"autoload": {
 		"psr-4": {
@@ -16,5 +16,5 @@
 		}
 	},
 	"prefer-stable": true,
-    "minimun-stability": "dev"
+    "minimun-stability": "stable"
 }
