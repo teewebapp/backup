@@ -46,7 +46,7 @@ interface Storage
 
 
     /**
-     * Remove um arquivo a partir do seu id
+     * Remove a file by its id
      */
     public function delete($id);
 }

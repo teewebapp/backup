@@ -5,6 +5,7 @@ namespace Tee\Backup\Storage\GDrive;
 use Google_Service_Drive;
 use Google_Auth_AssertionCredentials;
 use Google_Client;
+use Google_Service_Drive_DriveFile;
 
 class Storage implements \Tee\Backup\Storage\Storage
 {
@@ -12,6 +13,8 @@ class Storage implements \Tee\Backup\Storage\Storage
     private $client;
     private $drive;
     private $id;
+    private $folder;
+    private $gdriveFolder;
 
     public $chunkSizeBytes;
 
@@ -22,6 +25,7 @@ class Storage implements \Tee\Backup\Storage\Storage
     {
         $this->chunkSizeBytes = 1 * 1024 * 1024;
         $this->id = $id;
+        $this->folder = $configuration['folder'];
 
         $clientEmail = $configuration['clientEmail'];
         if($configuration['privateKeyContent'])
@@ -53,7 +57,31 @@ class Storage implements \Tee\Backup\Storage\Storage
             $this->client->getAuth()->refreshTokenWithAssertion();
         }
         $this->drive = new Google_Service_Drive($this->client);
+
+        if($this->folder)
+            $this->changeFolder($this->folder);
+
         return true;
+    }
+
+    public function changeFolder($folder) {
+
+        $files = $this->drive->files->listFiles();
+        foreach ($files->getItems() as $item) {
+            if ($item->getTitle() == $folder) {
+                $this->gdriveFolder = $item;
+                break;
+            }
+        }
+        if(!$this->gdriveFolder) {
+            $file = new Google_Service_Drive_DriveFile();
+            $file->setTitle($folder);
+            $file->setMimeType('application/vnd.google-apps.folder');
+
+            $this->gdriveFolder = $this->drive->files->insert($file, array(
+                'mimeType' => 'application/vnd.google-apps.folder',
+            ));
+        }
     }
 
     /**
@@ -73,6 +101,11 @@ class Storage implements \Tee\Backup\Storage\Storage
 
         $file = new \Google_Service_Drive_DriveFile();
         $file->title = basename($localPath);
+        if($this->gdriveFolder) {
+            $parent = new \Google_Service_Drive_ParentReference();
+            $parent->setId($this->gdriveFolder->getId());
+            $file->setParents(array($parent));
+        }
         $chunkSizeBytes = $this->chunkSizeBytes;
         $this->client->setDefer(true);
         $request = $this->drive->files->insert($file);
@@ -116,7 +149,12 @@ class Storage implements \Tee\Backup\Storage\Storage
      */ 
     public function listFiles()
     {
-        $rawFiles = $this->drive->files->listFiles(array())->getItems();
+        $params = array();
+
+        if($this->gdriveFolder)
+            $params['q'] = "'{$this->gdriveFolder->getId()}' in parents";
+
+        $rawFiles = $this->drive->files->listFiles($params)->getItems();
         $results = array();
         foreach($rawFiles as $file) {
             $results[] = new File($file, $this);
@@ -142,7 +180,8 @@ class Storage implements \Tee\Backup\Storage\Storage
         }
     }
 
-    public function getClient() {    
+    public function getClient()
+    {    
         return $this->client;
     }
 
@@ -150,5 +189,4 @@ class Storage implements \Tee\Backup\Storage\Storage
     {
         return $this->id;
     }
-
 }

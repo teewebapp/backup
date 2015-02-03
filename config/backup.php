@@ -10,6 +10,8 @@ return array(
         array(
             'type' => 'gdrive',
 
+            'folder' => 'testfolder',
+
             'clientEmail' => getenv('BACKUP_GDRIVE_EMAIL'),
 
             'privateKeyFile' => null,

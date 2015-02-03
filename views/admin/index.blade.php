@@ -28,7 +28,7 @@
             @else
                 <tr>
                     <td colspan="4">
-                        Nenhuma backup encontrado
+                        Nenhum backup encontrado
                     </td>
                 </tr>
             @endif

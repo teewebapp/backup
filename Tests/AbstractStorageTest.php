@@ -7,6 +7,8 @@ use Tee\Backup\Storage\File as IFile;
 
 abstract class AbstractStorageTest extends TestCase
 {
+    const TEST_SIZE = 524288; // 512kb
+
     public function getStorage()
     {
         throw new Exception('Not Implemented');
@@ -27,7 +29,7 @@ abstract class AbstractStorageTest extends TestCase
         $files = $storage->listFiles();
         foreach($files as $file) {
             $this->assertTrue($file instanceof IFile);
-            $this->assertNotEmpty($file->getName());
+            $this->assertNotEmpty($file->getId());
         }
     }
 
@@ -36,9 +38,9 @@ abstract class AbstractStorageTest extends TestCase
      */
     public function testUploadFile($storage)
     {
-        $storage->chunkSizeBytes = 0.5 * 1024 * 1024;
+        $storage->chunkSizeBytes = self::TEST_SIZE / 2;
         $fileName = tempnam(sys_get_temp_dir(), 'test');
-        $content = str_repeat("i", round($storage->chunkSizeBytes * 1.5));
+        $content = str_repeat("i", self::TEST_SIZE);
         file_put_contents($fileName, $content);
         $file = $storage->uploadFile($fileName);
         $this->assertTrue($file instanceof IFile);
@@ -66,7 +68,7 @@ abstract class AbstractStorageTest extends TestCase
         unlink($tempName);
         $file->download($tempName);
         $this->assertTrue(file_exists($tempName));
-        $content = str_repeat("i", round((0.5 * 1024 * 1024) * 1.5));
+        $content = str_repeat("i", self::TEST_SIZE);
         $this->assertEquals($content, file_get_contents($tempName));
         $file->delete();
     }
